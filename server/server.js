@@ -12,12 +12,15 @@ const { ensureUploadsDir } = require('./middleware/upload');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-const GOOGLE_CALLBACK_URL = process.env.GOOGLE_CALLBACK_URL || `http://localhost:${PORT}/auth/google/callback`;
+const isProduction = process.env.NODE_ENV === 'production';
+const RENDER_URL = process.env.RENDER_URL || `https://samreen-portfolio.onrender.com`;
+const GOOGLE_CALLBACK_URL = process.env.GOOGLE_CALLBACK_URL || 
+    (isProduction ? `${RENDER_URL}/auth/google/callback` : `http://localhost:${PORT}/auth/google/callback`);
 
 // Middleware
 app.use(cors({
     origin: process.env.NODE_ENV === 'production'
-        ? (process.env.CLIENT_URL || false)
+        ? (process.env.CLIENT_URL || 'https://samreen-portfolio.vercel.app')
         : true,
     credentials: true
 }));

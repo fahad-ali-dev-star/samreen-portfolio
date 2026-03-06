@@ -16,7 +16,7 @@ router.get('/google', (req, res, next) => {
 router.get('/google/callback',
     passport.authenticate('google', { failureRedirect: '/auth/login-failed' }),
     (req, res) => {
-        res.redirect(process.env.CLIENT_URL + '/admin');
+        res.redirect((process.env.CLIENT_URL || 'https://samreen-portfolio.vercel.app') + '/admin');
     }
 );
 
@@ -55,7 +55,7 @@ router.get('/login-failed', (req, res) => {
             <div class="error-icon"><i class="fas fa-exclamation-triangle"></i></div>
             <h1>${title}</h1>
             <p>${message}</p>
-            <a href="${process.env.CLIENT_URL || '/'}" class="btn"><i class="fas fa-home"></i> Back to Home</a>
+            <a href="${process.env.CLIENT_URL || 'https://samreen-portfolio.vercel.app' || '/'}" class="btn"><i class="fas fa-home"></i> Back to Home</a>
         </div>
     </body>
     </html>
