@@ -10,12 +10,34 @@ const multer = require('multer');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const isProduction = process.env.NODE_ENV === 'production';
+const DEFAULT_CLIENT_URL = 'https://samreen-portfolio-orfx.vercel.app';
+const parseClientUrls = () => {
+    const configured = `${process.env.CLIENT_URL || ''},${process.env.CLIENT_URLS || ''}`
+        .split(',')
+        .map((url) => url.trim())
+        .filter(Boolean);
+
+    return Array.from(new Set([DEFAULT_CLIENT_URL, ...configured]));
+};
+const CLIENT_URLS = parseClientUrls();
+const getPrimaryClientUrl = () => CLIENT_URLS[0];
 const GOOGLE_CALLBACK_URL =
-    process.env.GOOGLE_CALLBACK_URL || `http://localhost:${PORT}/auth/google/callback`;
+    process.env.GOOGLE_CALLBACK_URL ||
+    (isProduction ? `${process.env.RENDER_URL || 'https://samreen-portfolio.onrender.com'}/auth/google/callback` : `http://localhost:${PORT}/auth/google/callback`);
+
+if (isProduction) {
+    app.set('trust proxy', 1);
+}
 
 // Middleware
 app.use(cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5500',
+    origin: (origin, callback) => {
+        if (!isProduction || !origin || CLIENT_URLS.includes(origin)) {
+            return callback(null, true);
+        }
+        return callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
     credentials: true
 }));
 app.use(express.json());
@@ -28,8 +50,9 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: process.env.NODE_ENV === 'production',
-        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+        secure: isProduction,
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+        sameSite: isProduction ? 'none' : 'lax'
     }
 }));
 
@@ -177,7 +200,7 @@ app.get('/auth/google',
 app.get('/auth/google/callback',
     passport.authenticate('google', { failureRedirect: '/login-failed' }),
     (req, res) => {
-        res.redirect(process.env.CLIENT_URL + '/admin.html');
+        res.redirect(`${getPrimaryClientUrl()}/admin.html`);
     }
 );
 
@@ -208,7 +231,7 @@ app.get('/login-failed', (req, res) => {
             <div class="error-icon"><i class="fas fa-exclamation-triangle"></i></div>
             <h1>Login Failed</h1>
             <p>You are not authorized to access this admin panel.</p>
-            <a href="/" class="btn"><i class="fas fa-home"></i> Back to Home</a>
+            <a href="${getPrimaryClientUrl()}" class="btn"><i class="fas fa-home"></i> Back to Home</a>
         </div>
     </body>
     </html>

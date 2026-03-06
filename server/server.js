@@ -14,14 +14,31 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 const isProduction = process.env.NODE_ENV === 'production';
 const RENDER_URL = process.env.RENDER_URL || `https://samreen-portfolio.onrender.com`;
+const DEFAULT_CLIENT_URL = 'https://samreen-portfolio-orfx.vercel.app';
+const parseClientUrls = () => {
+    const configured = `${process.env.CLIENT_URL || ''},${process.env.CLIENT_URLS || ''}`
+        .split(',')
+        .map((url) => url.trim())
+        .filter(Boolean);
+
+    return Array.from(new Set([DEFAULT_CLIENT_URL, ...configured]));
+};
+const CLIENT_URLS = parseClientUrls();
 const GOOGLE_CALLBACK_URL = process.env.GOOGLE_CALLBACK_URL || 
     (isProduction ? `${RENDER_URL}/auth/google/callback` : `http://localhost:${PORT}/auth/google/callback`);
 
+if (isProduction) {
+    app.set('trust proxy', 1);
+}
+
 // Middleware
 app.use(cors({
-    origin: process.env.NODE_ENV === 'production'
-        ? (process.env.CLIENT_URL || 'https://samreen-portfolio.vercel.app')
-        : true,
+    origin: (origin, callback) => {
+        if (!isProduction || !origin || CLIENT_URLS.includes(origin)) {
+            return callback(null, true);
+        }
+        return callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
     credentials: true
 }));
 app.use(express.json());

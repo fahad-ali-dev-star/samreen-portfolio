@@ -1,6 +1,16 @@
 const express = require('express');
 const passport = require('passport');
 const router = express.Router();
+const DEFAULT_CLIENT_URL = 'https://samreen-portfolio-orfx.vercel.app';
+const parseClientUrls = () => {
+    const configured = `${process.env.CLIENT_URL || ''},${process.env.CLIENT_URLS || ''}`
+        .split(',')
+        .map((url) => url.trim())
+        .filter(Boolean);
+
+    return Array.from(new Set([DEFAULT_CLIENT_URL, ...configured]));
+};
+const getPrimaryClientUrl = () => parseClientUrls()[0];
 
 // Google OAuth routes
 router.get('/google', (req, res, next) => {
@@ -16,7 +26,7 @@ router.get('/google', (req, res, next) => {
 router.get('/google/callback',
     passport.authenticate('google', { failureRedirect: '/auth/login-failed' }),
     (req, res) => {
-        res.redirect((process.env.CLIENT_URL || 'https://samreen-portfolio.vercel.app') + '/admin');
+        res.redirect(`${getPrimaryClientUrl()}/admin`);
     }
 );
 
@@ -55,7 +65,7 @@ router.get('/login-failed', (req, res) => {
             <div class="error-icon"><i class="fas fa-exclamation-triangle"></i></div>
             <h1>${title}</h1>
             <p>${message}</p>
-            <a href="${process.env.CLIENT_URL || 'https://samreen-portfolio.vercel.app' || '/'}" class="btn"><i class="fas fa-home"></i> Back to Home</a>
+            <a href="${getPrimaryClientUrl()}" class="btn"><i class="fas fa-home"></i> Back to Home</a>
         </div>
     </body>
     </html>
