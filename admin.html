@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Portfolio Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="admin-style.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <div class="login-visual">
+                <div class="orbit-container">
+                    <div class="orbit orbit-1"></div>
+                    <div class="orbit orbit-2"></div>
+                    <div class="orbit orbit-3"></div>
+                    <div class="central-icon">
+                        <i class="fas fa-shield-halved"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="login-content">
+                <h1>Portfolio Admin</h1>
+                <p class="login-subtitle">Secure access for authorized personnel</p>
+                <button id="googleLoginBtn" class="google-login-btn">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19.6 10.2273C19.6 9.51821 19.5364 8.83639 19.4182 8.18185H10V12.0501H15.3818C15.15 13.3001 14.4455 14.3592 13.3864 15.0682V17.5773H16.6182C18.5091 15.8364 19.6 13.2728 19.6 10.2273Z" fill="#4285F4"/>
+                        <path d="M10 20C12.7 20 14.9636 19.1045 16.6182 17.5773L13.3864 15.0682C12.4909 15.6682 11.3455 16.0227 10 16.0227C7.39545 16.0227 5.19091 14.2636 4.40455 11.9H1.06364V14.4909C2.70909 17.7591 6.09091 20 10 20Z" fill="#34A853"/>
+                        <path d="M4.40455 11.9C4.20455 11.3 4.09091 10.6591 4.09091 10C4.09091 9.34091 4.20455 8.7 4.40455 8.1V5.50909H1.06364C0.386364 6.85909 0 8.38636 0 10C0 11.6136 0.386364 13.1409 1.06364 14.4909L4.40455 11.9Z" fill="#FBBC04"/>
+                        <path d="M10 3.97727C11.4682 3.97727 12.7864 4.48182 13.8227 5.47273L16.6909 2.60455C14.9591 0.990909 12.6955 0 10 0C6.09091 0 2.70909 2.24091 1.06364 5.50909L4.40455 8.1C5.19091 5.73636 7.39545 3.97727 10 3.97727Z" fill="#EA4335"/>
+                    </svg>
+                    <span>Continue with Google</span>
+                </button>
+                <div class="login-info">
+                    <i class="fas fa-info-circle"></i>
+                    <p>Only authorized admin accounts can access this panel</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="admin-dashboard" style="display: none;">
+        <!-- Header -->
+        <header class="admin-header">
+            <div class="header-left">
+                <h1>
+                    <i class="fas fa-layer-group"></i>
+                    Portfolio Manager
+                </h1>
+            </div>
+            <div class="header-right">
+                <div class="user-info" id="userInfo">
+                    <img id="userPhoto" src="" alt="User">
+                    <span id="userName"></span>
+                </div>
+                <button id="logoutBtn" class="logout-btn">
+                    <i class="fas fa-right-from-bracket"></i>
+                    Logout
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <div class="dashboard-controls">
+                <h2>Projects</h2>
+                <button id="addProjectBtn" class="btn-primary">
+                    <i class="fas fa-plus"></i>
+                    Add New Project
+                </button>
+            </div>
+
+            <!-- Projects Table -->
+            <div class="projects-table-container">
+                <table class="projects-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Image</th>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Tools</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="projectsTableBody">
+                        <!-- Projects will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Project Modal -->
+    <div id="projectModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New Project</h2>
+                <button class="modal-close" id="closeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="projectForm" enctype="multipart/form-data">
+                <input type="hidden" id="projectId" name="projectId">
+                
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="title">Project Title *</label>
+                        <input type="text" id="title" name="title" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category">Category *</label>
+                        <select id="category" name="category" required>
+                            <option value="">Select Category</option>
+                            <option value="UI/UX Design">UI/UX Design</option>
+                            <option value="Graphic Design">Graphic Design</option>
+                            <option value="Branding">Branding</option>
+                            <option value="Web Development">Web Development</option>
+                            <option value="Mobile App">Mobile App</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tools">Tools (comma separated) *</label>
+                        <input type="text" id="tools" name="tools" placeholder="Figma, Photoshop, Illustrator" required>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="image">Project Image *</label>
+                        <div class="file-input-wrapper">
+                            <input type="file" id="imageFile" name="image" accept="image/*">
+                            <input type="text" id="imageUrl" name="imageUrl" placeholder="Or enter image URL">
+                        </div>
+                        <div id="imagePreview" class="image-preview"></div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="description">Description *</label>
+                        <textarea id="description" name="description" rows="3" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="problem">Problem</label>
+                        <textarea id="problem" name="problem" rows="2"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="solution">Solution</label>
+                        <textarea id="solution" name="solution" rows="2"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="concept">Concept</label>
+                        <textarea id="concept" name="concept" rows="2"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="features">Features</label>
+                        <textarea id="features" name="features" rows="2"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="scope">Scope</label>
+                        <textarea id="scope" name="scope" rows="2"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="brandElements">Brand Elements</label>
+                        <textarea id="brandElements" name="brandElements" rows="2"></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="brandMessage">Brand Message</label>
+                        <textarea id="brandMessage" name="brandMessage" rows="2"></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn-primary" id="saveBtn">
+                        <i class="fas fa-save"></i>
+                        Save Project
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="admin-script.js"></script>
+</body>
+</html>

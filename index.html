@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Samreen Shafqat | Graphic Designer Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container">
+            <nav>
+                <a href="#" class="logo">Samreen<span>.</span></a>
+                <ul class="nav-links" id="primary-navigation" aria-hidden="true">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Hi, I'm <span id="typewriter-name">Samreen Shafqat</span></h1>
+                    <h2>Graphic & UI/UX Designer</h2>
+                    <p>I create intuitive, user-centered digital experiences with clean and functional interfaces. With a background in fine arts and expertise in modern design tools, I bring both creativity and logic to every project.</p>
+                    <a href="#projects" class="btn">View My Work</a>
+                    <a href="#contact" class="btn btn-secondary">Contact Me</a>
+                </div>
+                <div class="hero-image">
+                    <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Designer Workspace">
+                    <div class="hero-bg-shape"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="section-title">
+                <h2>About Me</h2>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>UI/UX Designer with Passion for Digital Experiences</h3>
+                    <p>I'm a UI/UX designer with a passion for creating intuitive, user-centered digital experiences. I specialize in designing clean and functional interfaces that not only look good but also solve real user problems.</p>
+                    <p>With a background in fine arts and hands-on experience in tools like Figma and Photoshop, I bring both creativity and logic into every project.</p>
+                    
+                    <div class="education">
+                        <h4>Education</h4>
+                        <p>Bachelor’s in Graphic Design from <strong>Islamia University Bahawalpur</strong> (2021–2025)</p>
+                    </div>
+                    
+                    <p>I've worked for a year at Workfello Studio and another year remotely with <strong>Creative Fox Studio</strong>, gaining hands-on experience in designing user-centered digital products.</p>
+                    
+                    <div class="tools">
+                        <h4>Tools & Technologies</h4>
+                        <div class="tools-grid">
+                            <div class="tool-item">
+                                <i class="fab fa-figma"></i>
+                                <h5>Figma</h5>
+                            </div>
+                            <div class="tool-item">
+                                <i class="fab fa-adobe"></i>
+                                <h5>Photoshop</h5>
+                            </div>
+                            <div class="tool-item">
+                                <i class="fas fa-palette"></i>
+                                <h5>Illustrator</h5>
+                            </div>
+                            <div class="tool-item">
+                                <i class="fas fa-film"></i>
+                                <h5>After Effects</h5>
+                            </div>
+                            <div class="tool-item">
+                                <i class="fas fa-robot"></i>
+                                <h5>ChatGPT</h5>
+                            </div>
+                            <!-- <div class="tool-item">
+                                <i class="fas fa-code"></i>
+                                <h5>HTML/CSS</h5>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=900&q=80" alt="Designer Profile" style="width: 70%; border-radius: var(--radius); box-shadow: var(--shadow); margin-left: 20%; ">
+                </div> -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="projects" id="projects">
+        <div class="container">
+            <div class="section-title">
+                <h2>My Projects</h2>
+            </div>
+            
+            <div class="projects-filter">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="ui-ux">UI/UX Design</button>
+                <button class="filter-btn" data-filter="graphic">Graphic Design</button>
+                <button class="filter-btn" data-filter="branding">Branding</button>
+            </div>
+            
+            <div class="projects-grid" id="projectsGrid">
+                <!-- Projects will be loaded dynamically from API -->
+                <div class="loading-projects">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading projects...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="section-title">
+                <h2>Get In Touch</h2>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h3>Let's Work Together</h3>
+                    <p>I'm always open to discussing new opportunities, creative projects, or potential collaborations. Feel free to reach out if you have a project in mind or just want to say hello!</p>
+                    
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <h4>Email</h4>
+                                <p>sameenshaftqat.ss@gmail.com</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <h4>Location</h4>
+                                <p>Pakistan</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-briefcase"></i>
+                            <div>
+                                <h4>Freelance</h4>
+                                <p>Available for projects</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <input type="text" placeholder="Your Name" required>
+                        <input type="email" placeholder="Your Email" required>
+                        <input type="text" placeholder="Subject" required>
+                        <textarea placeholder="Your Message" required></textarea>
+                        <button type="submit" class="btn">Send Message</button>
+                    </form>
+                    <a href="https://instagram.com/yourusername" target="_blank" rel="noopener noreferrer" class="btn instagram-btn">
+                        <i class="fab fa-instagram"></i>
+                        Follow on Instagram
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="logo">Samreen<span>.</span></div>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+                <div class="admin-link">
+                    <a href="admin.html"><i class="fas fa-cog"></i> Admin Panel</a>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 Samreen Shafqat. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Project Detail Modal -->
+    <div class="modal-overlay" id="projectDetailModal">
+        <div class="modal">
+            <div class="modal-close">
+                <i class="fas fa-times"></i>
+            </div>
+            <div class="modal-content" id="modalContent">
+                <!-- Dynamic content will be loaded here -->
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
