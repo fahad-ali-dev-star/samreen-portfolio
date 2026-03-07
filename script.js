@@ -1,4 +1,4 @@
-// API Configuration
+t // API Configuration
 const API_URL = window.location.hostname === 'localhost'
     ? 'http://localhost:3001'
     : 'https://samreen-portfolio.onrender.com';
@@ -140,7 +140,7 @@ function renderProjects(projects) {
     projectsGrid.innerHTML = projects.map(project => `
         <div class="project-card" data-category="${getCategoryFilter(project.category)}">
             <div class="project-img">
-                <img src="${project.image}" alt="${project.title}">
+                <img src="${getImageUrl(project.image)}" alt="${project.title}">
             </div>
             <div class="project-info">
                 <h3>${project.title}</h3>
@@ -155,6 +155,19 @@ function renderProjects(projects) {
     
     // Re-attach event listeners to new buttons
     attachProjectButtonListeners();
+}
+
+// Helper function to get correct image URL
+function getImageUrl(imagePath) {
+    if (!imagePath) return '';
+    if (imagePath.startsWith('http')) {
+        return imagePath;
+    }
+    if (imagePath.startsWith('/uploads/')) {
+        return `${API_URL}${imagePath}`;
+    }
+    // For relative paths like images/xxx.jpg
+    return imagePath;
 }
 
 // Get category filter value from category name
@@ -194,7 +207,7 @@ function openProjectModal(project) {
     
     modalContent.innerHTML = `
         <div class="modal-img">
-            <img src="${project.image}" alt="${project.title}">
+            <img src="${getImageUrl(project.image)}" alt="${project.title}">
         </div>
         <div class="modal-info">
             <h3>${project.title}</h3>
@@ -350,10 +363,34 @@ window.addEventListener('scroll', () => {
 // Contact form submission
 const contactForm = document.getElementById('contactForm');
 if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
+    contactForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+        
         const name = contactForm.querySelector('input[type="text"]').value;
-        alert(`Thank you, ${name}! Your message has been sent.`);
-        contactForm.reset();
+        const email = contactForm.querySelector('input[type="email"]').value;
+        const subject = contactForm.querySelector('input[placeholder="Subject"]').value;
+        const message = contactForm.querySelector('textarea').value;
+        
+        try {
+            const response = await fetch(`${API_URL}/api/contact`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, email, subject, message })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                alert(data.message);
+                contactForm.reset();
+            } else {
+                alert(data.error || 'Failed to send message. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error submitting contact form:', error);
+            alert('Failed to send message. Please try again.');
+        }
     });
 }

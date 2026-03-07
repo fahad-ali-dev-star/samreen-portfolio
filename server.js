@@ -1,4 +1,4 @@
-require('dotenv').config();
+d require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
@@ -11,7 +11,7 @@ const multer = require('multer');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const isProduction = process.env.NODE_ENV === 'production';
-const DEFAULT_CLIENT_URL = 'https://samreen-portfolio-orfx.vercel.app';
+const DEFAULT_CLIENT_URL = 'https://samreen-portfolio.vercel.app';
 const parseClientUrls = () => {
     const configured = `${process.env.CLIENT_URL || ''},${process.env.CLIENT_URLS || ''}`
         .split(',')
@@ -157,7 +157,7 @@ const isAuthenticated = (req, res, next) => {
 };
 
 // Database file path
-const DB_FILE = path.join(__dirname, 'projects.json');
+const DB_FILE = path.join(__dirname, 'data', 'projects.json');
 
 // Initialize database if it doesn't exist
 const initDB = async () => {
@@ -381,6 +381,29 @@ app.delete('/api/admin/projects/:id', isAuthenticated, async (req, res) => {
     } catch (error) {
         console.error('Error deleting project:', error);
         res.status(500).json({ error: 'Failed to delete project' });
+    }
+});
+
+// Contact form submission endpoint
+app.post('/api/contact', async (req, res) => {
+    try {
+        const { name, email, subject, message } = req.body;
+        
+        // Validate required fields
+        if (!name || !email || !subject || !message) {
+            return res.status(400).json({ error: 'All fields are required' });
+        }
+        
+        // Log the contact form submission
+        console.log('Contact form submission:', { name, email, subject, message });
+        
+        res.json({ 
+            success: true, 
+            message: 'Thank you! Your message has been received. We will get back to you soon.' 
+        });
+    } catch (error) {
+        console.error('Error processing contact form:', error);
+        res.status(500).json({ error: 'Failed to send message. Please try again.' });
     }
 });
 
