@@ -1,4 +1,7 @@
-const API_URL = window.location.origin;
+// Use Render backend for all API calls
+// Change this to your Render backend URL
+const RENDER_BACKEND_URL = 'https://samreen-portfolio.onrender.com';
+const API_URL = RENDER_BACKEND_URL;
 
 // Store the current origin for redirect after login
 const CURRENT_ORIGIN = window.location.origin;
@@ -6,7 +9,6 @@ const CURRENT_ORIGIN = window.location.origin;
 // DOM Elements
 const loginScreen = document.getElementById('loginScreen');
 const adminDashboard = document.getElementById('adminDashboard');
-const passwordLoginForm = document.getElementById('passwordLoginForm');
 const googleLoginBtn = document.getElementById('googleLoginBtn');
 const logoutBtn = document.getElementById('logoutBtn');
 const userInfo = document.getElementById('userInfo');
@@ -27,35 +29,8 @@ const imagePreview = document.getElementById('imagePreview');
 checkAuthStatus();
 
 // Event Listeners
-// Password login (for Vercel deployment)
-if (passwordLoginForm) {
-    passwordLoginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const password = document.getElementById('adminPassword').value;
-        
-        try {
-            const response = await fetch(`${API_URL}/api/auth/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify({ password })
-            });
-            
-            const data = await response.json();
-            
-            if (data.success) {
-                checkAuthStatus();
-            } else {
-                alert(data.error || 'Login failed');
-            }
-        } catch (error) {
-            console.error('Login error:', error);
-            alert('Login failed. Please try again.');
-        }
-    });
-}
 
-// Google login (for self-hosted server)
+// Google login - connects to Render backend
 googleLoginBtn.addEventListener('click', () => {
     // Pass the current origin as redirect parameter so server knows where to redirect after login
     window.location.href = `${API_URL}/auth/google?redirect=${encodeURIComponent(CURRENT_ORIGIN)}`;
@@ -63,17 +38,10 @@ googleLoginBtn.addEventListener('click', () => {
 
 logoutBtn.addEventListener('click', async () => {
     try {
-        // Try Vercel API first, fallback to server route
-        let response = await fetch(`${API_URL}/api/auth/logout`, {
+        // Use Render backend for logout
+        const response = await fetch(`${API_URL}/auth/logout`, {
             credentials: 'include'
         });
-        
-        // If not found, try the server route
-        if (response.status === 404) {
-            response = await fetch(`${API_URL}/auth/logout`, {
-                credentials: 'include'
-            });
-        }
         
         window.location.reload();
     } catch (error) {
@@ -130,6 +98,7 @@ projectForm.addEventListener('submit', async (e) => {
 // Functions
 async function checkAuthStatus() {
     try {
+        // Use Render backend for auth status
         const response = await fetch(`${API_URL}/auth/status`, {
             credentials: 'include'
         });
