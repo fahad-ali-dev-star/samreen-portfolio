@@ -1,7 +1,11 @@
 import axios from 'axios'
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.DEV ? '' : 'https://samreen-portfolio.onrender.com')
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'https://samreen-portfolio.onrender.com',
+  baseURL: API_BASE_URL,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json'
@@ -50,7 +54,12 @@ export const projectsApi = {
 export const authApi = {
   getStatus: () => api.get('/auth/status'),
   logout: () => api.get('/auth/logout'),
-  getGoogleLoginUrl: () => '/auth/google'
+  getGoogleLoginUrl: (redirectUrl) => {
+    if (!redirectUrl) {
+      return `${API_BASE_URL}/auth/google`
+    }
+    return `${API_BASE_URL}/auth/google?redirect=${encodeURIComponent(redirectUrl)}`
+  }
 }
 
 export default api

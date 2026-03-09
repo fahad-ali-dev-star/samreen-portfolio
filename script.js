@@ -1,6 +1,6 @@
-t // API Configuration
+// API Configuration
 const API_URL = window.location.hostname === 'localhost'
-    ? 'http://localhost:3001'
+    ? 'http://localhost:3000'
     : 'https://samreen-portfolio.onrender.com';
 
 // Project Modal Elements

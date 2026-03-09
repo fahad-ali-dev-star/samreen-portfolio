@@ -11,6 +11,21 @@ const parseClientUrls = () => {
     return Array.from(new Set([DEFAULT_CLIENT_URL, ...configured]));
 };
 const getPrimaryClientUrl = () => parseClientUrls()[0];
+const isAllowedClientUrl = (candidateUrl) => {
+    try {
+        const normalized = new URL(String(candidateUrl || '').trim()).origin;
+        return parseClientUrls().includes(normalized);
+    } catch (error) {
+        return false;
+    }
+};
+const getRequestedClientUrl = (req) => {
+    const redirectUrl = req.query && req.query.redirect ? String(req.query.redirect).trim() : '';
+    if (redirectUrl && isAllowedClientUrl(redirectUrl)) {
+        return new URL(redirectUrl).origin;
+    }
+    return getPrimaryClientUrl();
+};
 
 // Google OAuth routes
 router.get('/google', (req, res, next) => {
@@ -20,13 +35,25 @@ router.get('/google', (req, res, next) => {
         googleClientId === 'placeholder' || googleClientSecret === 'placeholder') {
         return res.redirect('/auth/login-failed?reason=not-configured');
     }
+    if (req.session) {
+        req.session.oauthRedirectUrl = getRequestedClientUrl(req);
+    }
     passport.authenticate('google', { scope: ['profile', 'email'] })(req, res, next);
 });
 
 router.get('/google/callback',
     passport.authenticate('google', { failureRedirect: '/auth/login-failed' }),
     (req, res) => {
-        res.redirect(`${getPrimaryClientUrl()}/admin`);
+        const sessionRedirectUrl = req.session ? req.session.oauthRedirectUrl : '';
+        const redirectBaseUrl = sessionRedirectUrl && isAllowedClientUrl(sessionRedirectUrl)
+            ? new URL(sessionRedirectUrl).origin
+            : getPrimaryClientUrl();
+
+        if (req.session) {
+            delete req.session.oauthRedirectUrl;
+        }
+
+        res.redirect(`${redirectBaseUrl}/admin`);
     }
 );
 

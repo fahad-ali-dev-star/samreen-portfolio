@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react'
-import api from '../services/api'
+import api, { authApi } from '../services/api'
 
 const AuthContext = createContext(null)
 
@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }) => {
   }, [checkAuthStatus])
 
   const login = () => {
-    window.location.href = '/auth/google'
+    window.location.href = authApi.getGoogleLoginUrl(window.location.origin)
   }
 
   const logout = async () => {

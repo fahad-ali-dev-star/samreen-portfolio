@@ -1,4 +1,4 @@
-d require('dotenv').config();
+require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
@@ -11,17 +11,35 @@ const multer = require('multer');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const isProduction = process.env.NODE_ENV === 'production';
-const DEFAULT_CLIENT_URL = 'https://samreen-portfolio.vercel.app';
 const parseClientUrls = () => {
     const configured = `${process.env.CLIENT_URL || ''},${process.env.CLIENT_URLS || ''}`
         .split(',')
         .map((url) => url.trim())
         .filter(Boolean);
 
-    return Array.from(new Set([DEFAULT_CLIENT_URL, ...configured]));
+    return Array.from(new Set(configured));
 };
 const CLIENT_URLS = parseClientUrls();
-const getPrimaryClientUrl = () => CLIENT_URLS[0];
+const getPrimaryClientUrl = () => CLIENT_URLS[0] || '';
+const isAllowedClientUrl = (candidateUrl) => {
+    try {
+        const parsed = new URL(String(candidateUrl || '').trim());
+        const normalized = parsed.origin;
+        if (!isProduction && (parsed.hostname === 'localhost' || parsed.hostname === '127.0.0.1')) {
+            return true;
+        }
+        return CLIENT_URLS.includes(normalized);
+    } catch (error) {
+        return false;
+    }
+};
+const getRequestedClientUrl = (req) => {
+    const redirectUrl = req.query && req.query.redirect ? String(req.query.redirect).trim() : '';
+    if (redirectUrl && isAllowedClientUrl(redirectUrl)) {
+        return new URL(redirectUrl).origin;
+    }
+    return getPrimaryClientUrl();
+};
 const GOOGLE_CALLBACK_URL =
     process.env.GOOGLE_CALLBACK_URL ||
     (isProduction ? `${process.env.RENDER_URL || 'https://samreen-portfolio.onrender.com'}/auth/google/callback` : `http://localhost:${PORT}/auth/google/callback`);
@@ -119,26 +137,36 @@ const normalizeEmail = (email) => {
 };
 
 // Google OAuth Strategy
-passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: GOOGLE_CALLBACK_URL
-  },
-  (accessToken, refreshToken, profile, done) => {
-    // Check if user email matches admin email
-    const userEmail = normalizeEmail(profile.emails?.[0]?.value);
-    const adminEmail = normalizeEmail(process.env.ADMIN_EMAIL);
-    if (userEmail && adminEmail && userEmail === adminEmail) {
-      return done(null, profile);
-    } else {
-      console.warn('Admin login denied:', {
-          googleEmail: profile.emails?.[0]?.value || '',
-          configuredAdmin: process.env.ADMIN_EMAIL || ''
-      });
-      return done(null, false, { message: 'Unauthorized' });
-    }
-  }
-));
+const googleOAuthConfigured = Boolean(
+    process.env.GOOGLE_CLIENT_ID &&
+    process.env.GOOGLE_CLIENT_SECRET &&
+    process.env.ADMIN_EMAIL
+);
+
+if (googleOAuthConfigured) {
+    passport.use(new GoogleStrategy({
+        clientID: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        callbackURL: GOOGLE_CALLBACK_URL
+      },
+      (accessToken, refreshToken, profile, done) => {
+        // Check if user email matches admin email
+        const userEmail = normalizeEmail(profile.emails?.[0]?.value);
+        const adminEmail = normalizeEmail(process.env.ADMIN_EMAIL);
+        if (userEmail && adminEmail && userEmail === adminEmail) {
+          return done(null, profile);
+        } else {
+          console.warn('Admin login denied:', {
+              googleEmail: profile.emails?.[0]?.value || '',
+              configuredAdmin: process.env.ADMIN_EMAIL || ''
+          });
+          return done(null, false, { message: 'Unauthorized' });
+        }
+      }
+    ));
+} else {
+    console.warn('Google OAuth is not configured. Missing GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, or ADMIN_EMAIL.');
+}
 
 passport.serializeUser((user, done) => {
     done(null, user);
@@ -194,13 +222,57 @@ const writeProjects = async (data) => {
 
 // Auth routes
 app.get('/auth/google',
+    (req, res, next) => {
+        if (!googleOAuthConfigured) {
+            return res.status(503).json({
+                error: 'Google OAuth is not configured on the server'
+            });
+        }
+        if (req.session) {
+            // First check for redirect query parameter, then fall back to request origin
+            const redirectParam = req.query && req.query.redirect ? String(req.query.redirect).trim() : '';
+            if (redirectParam) {
+                req.session.oauthRedirectUrl = redirectParam;
+            } else {
+                // Capture the client URL from the request origin for proper redirect
+                const clientOrigin = req.get('origin') || req.protocol + '://' + req.get('host');
+                req.session.oauthRedirectUrl = clientOrigin;
+            }
+        }
+        return next();
+    },
     passport.authenticate('google', { scope: ['profile', 'email'] })
 );
 
 app.get('/auth/google/callback',
+    (req, res, next) => {
+        if (!googleOAuthConfigured) {
+            return res.status(503).json({
+                error: 'Google OAuth is not configured on the server'
+            });
+        }
+        return next();
+    },
     passport.authenticate('google', { failureRedirect: '/login-failed' }),
     (req, res) => {
-        res.redirect(`${getPrimaryClientUrl()}/admin.html`);
+        // Use the stored OAuth redirect URL from the session
+        const sessionRedirectUrl = req.session ? req.session.oauthRedirectUrl : '';
+        
+        // Clean up session first
+        if (req.session) {
+            delete req.session.oauthRedirectUrl;
+        }
+
+        // Redirect to /admin - use relative path to stay on the same domain
+        // The admin.html file will be served from the same origin
+        const isLocal = req.get('host') && (req.get('host').includes('localhost') || req.get('host').includes('127.0.0.1'));
+        
+        if (isLocal) {
+            res.redirect('/admin');
+        } else {
+            // For production, redirect to /admin on the same domain
+            res.redirect('/admin');
+        }
     }
 );
 
@@ -405,6 +477,11 @@ app.post('/api/contact', async (req, res) => {
         console.error('Error processing contact form:', error);
         res.status(500).json({ error: 'Failed to send message. Please try again.' });
     }
+});
+
+// Allow /admin to open the existing admin panel page.
+app.get(['/admin', '/admin/*'], (req, res) => {
+    res.sendFile(path.join(__dirname, 'admin.html'));
 });
 
 // Start server

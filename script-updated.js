@@ -1,6 +1,6 @@
 // API Configuration
 const API_URL = window.location.hostname === 'localhost'
-    ? 'http://localhost:3001/api/projects'
+    ? 'http://localhost:3000/api/projects'
     : 'https://samreen-portfolio.onrender.com/api/projects';
 
 // Mobile Navigation Toggle (robust)
@@ -226,7 +226,7 @@ function getImageUrl(imagePath) {
         return imagePath;
     } else if (imagePath.startsWith('/uploads/')) {
         const backendBase = window.location.hostname === 'localhost'
-            ? 'http://localhost:3001'
+            ? 'http://localhost:3000'
             : 'https://samreen-portfolio.onrender.com';
         return `${backendBase}${imagePath}`;
     }
