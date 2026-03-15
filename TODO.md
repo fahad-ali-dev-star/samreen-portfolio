@@ -1,9 +1,9 @@
-# TODO List - Cleanup Project
+# 3D Animation Update TODO
 
-## Tasks:
-- [x] 1. Analyze script.js for duplicate code
-- [x] 2. Analyze script-updated.js usage
-- [x] 3. Clean up script.js - Remove all duplicate code
-- [x] 4. Delete the unused script-updated.js file
-- [x] 5. Verify the cleanup works correctly
-
+## Steps:
+- [x] 1. Install 3D dependencies (@react-three/fiber, @react-three/drei, three)
+- [x] 2. Update Hero.jsx with 3D canvas/model
+- [x] 3. Add local preview URL to README.md
+- [x] 4. Build and test
+- [ ] 5. Commit/push for Vercel/Render deploy
+- [ ] 6. Verify prod has 3D
