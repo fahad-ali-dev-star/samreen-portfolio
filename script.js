@@ -1,7 +1,7 @@
 // API Configuration
 const API_URL = window.location.hostname === 'localhost'
-    ? 'http://localhost:3000'
-    : 'https://samreen-portfolio.onrender.com';
+    ? 'http://localhost:3000/api/projects'
+    : 'https://samreen-portfolio.onrender.com/api/projects';
 
 // Project Modal Elements
 const projectModal = document.getElementById('projectDetailModal');
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Load projects from API
 async function loadProjects() {
     try {
-        const response = await fetch(`${API_URL}/api/projects`);
+        const response = await fetch(API_URL);
         if (!response.ok) {
             throw new Error('Failed to fetch projects');
         }
@@ -46,9 +46,9 @@ function getFallbackProjects() {
             title: "Pixibot AI Assistant",
             category: "UI/UX Design",
             image: "images/Portfolio-compressed-1_25-012.jpg",
-            description: "Pixibot is a smart and friendly mini AI assistant designed to help users with conversations, productivity tools, and creative ideas.",
-            problem: "Users had trouble finding a quick, friendly, and easy-to-use AI assistant.",
-            solution: "Pixibot offers a smart, voice-based AI with a simple design and daily planning tools.",
+            description: "Pixibot is a smart and friendly mini AI assistant designed to help users with conversations, productivity tools, and creative ideas. Its goal is to make digital experiences smoother, more efficient, and more fun through an easy-to-use and engaging interface.",
+            problem: "Users had trouble finding a quick, friendly, and easy-to-use AI assistant for planning and creative help. Complex interfaces made the experience frustrating.",
+            solution: "Pixibot offers a smart, voice-based AI with a simple design, daily planning tools, and creative suggestions, making tasks faster and more fun.",
             tools: "Figma, Photoshop, After Effects"
         },
         {
@@ -56,8 +56,8 @@ function getFallbackProjects() {
             title: "Sunehri Saaye",
             category: "Graphic Design",
             image: "images/Gemini_Generated_Image_3q9lcl3q9lcl3q9l.png",
-            description: "A visual storytelling project exploring three faces and their hidden secrets through shadow and light.",
-            concept: "Three faces, three secrets. The project visualizes the hidden stories behind personas.",
+            description: "A visual storytelling project exploring three faces and their hidden secrets through shadow and light. Each shadow hides a tale laced with poison.",
+            concept: "Three faces, three secrets. The project visualizes the hidden stories behind personas we present to the world.",
             tools: "Photoshop, Illustrator, After Effects"
         },
         {
@@ -65,7 +65,7 @@ function getFallbackProjects() {
             title: "Tiki Emotional Bot",
             category: "UI/UX Design",
             image: "images/Portfolio-compressed-1_25-021.jpg",
-            description: "Tiki is a smart robot that reflects human emotions through its eyes.",
+            description: "Tiki is a smart robot that reflects human emotions through its eyes. Whether you're happy or sad, Tiki responds with the perfect expression — making tech feel a little more human.",
             features: "Emotion recognition, responsive expressions, interactive interface",
             tools: "Figma, Illustrator, Principle"
         },
@@ -74,26 +74,26 @@ function getFallbackProjects() {
             title: "TASY Movie Promotion",
             category: "Graphic Design",
             image: "images/Portfolio-compressed-1_25-024.jpg",
-            description: "Graphic design for a zombie horror movie, including posters and promotional materials.",
-            scope: "Movie posters, social media graphics, landing page design",
+            description: "Graphic design for a zombie horror movie, including posters, landing page, and promotional materials. The project captures the terrifying atmosphere of a world where the dead don't sleep and the living don't last.",
+            scope: "Movie posters, social media graphics, landing page design, promotional materials",
             tools: "Photoshop, Illustrator, InDesign"
         },
         {
             id: "5",
             title: "NatureVe Skincare Brand",
             category: "Branding",
-            image: "images/Portfolio-compressed-1_25-043.jpg",
-            description: "Complete branding for an organic skincare line with prickly pear cactus as key ingredient.",
-            brandElements: "Logo design, color palette, typography, packaging",
+            image: "images/Gemini_Generated_Image_pwswi8pwswi8pwsw.png",
+            description: "Complete branding for an organic skincare line that uses prickly pear cactus as its key ingredient. The brand represents clean, kind, and nature-inspired skincare crafted for everyday radiance.",
+            brandElements: "Logo design, color palette, typography, packaging, brand guidelines",
             tools: "Illustrator, Photoshop, InDesign"
         },
         {
             id: "6",
             title: "Terra Jewel Hub",
             category: "Branding",
-            image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-            description: "Branding and visual identity for a handmade jewelry brand.",
-            brandMessage: "You are unique, you are timeless.",
+            image: "images/Portfolio-compressed-1_25-034.jpg",
+            description: "Branding and visual identity for a handmade jewelry brand that celebrates individuality and elegance. Every piece is crafted with passion and tells a unique story.",
+            brandMessage: "You are unique, you are timeless. Jewelry that speaks louder than words.",
             tools: "Illustrator, Photoshop, After Effects"
         },
         {
@@ -101,7 +101,8 @@ function getFallbackProjects() {
             title: "A Smart Way to Park",
             category: "Graphic Design",
             image: "images/Portfolio-compressed-1_25-014.jpg",
-            description: "Graphic design for a parking app that simplifies finding and reserving parking spots.",
+            description: "Graphic design for a parking app that simplifies finding and reserving parking spots in busy urban areas. The design focuses on user-friendliness and clear visual cues to enhance the parking experience.",
+            brandMessage: "A smart way to park in a busy city.",
             tools: "Illustrator, Photoshop, After Effects"
         },
         {
@@ -109,7 +110,8 @@ function getFallbackProjects() {
             title: "Healthy eat app",
             category: "Graphic Design",
             image: "images/Portfolio-compressed-1_25-016.jpg",
-            description: "Your one stop app for fresh fruit, vegetables and spices.",
+            description: "Your one stop app for fresh fruit, vegetables and spices. Order healthy eat fresh, and save time delivered straight to the door.",
+            brandMessage: "Fresh food delivered to your door.",
             tools: "Illustrator, Photoshop, After Effects"
         },
         {
@@ -117,7 +119,8 @@ function getFallbackProjects() {
             title: "Ashes Never Die",
             category: "Graphic Design",
             image: "images/Portfolio-compressed-1_25-025.jpg",
-            description: "A visual storytelling project about resilience and hidden secrets.",
+            description: "They thought the flame end her story. But some soul does not rest—they wait. In the silence of night, in the shadow of forgotten places... she stares. And this time she's not alone.",
+            brandMessage: "",
             tools: "Illustrator, Photoshop, After Effects"
         }
     ];
@@ -164,7 +167,10 @@ function getImageUrl(imagePath) {
         return imagePath;
     }
     if (imagePath.startsWith('/uploads/')) {
-        return `${API_URL}${imagePath}`;
+        const backendBase = window.location.hostname === 'localhost'
+            ? 'http://localhost:3000'
+            : 'https://samreen-portfolio.onrender.com';
+        return `${backendBase}${imagePath}`;
     }
     // For relative paths like images/xxx.jpg
     return imagePath;
@@ -316,6 +322,36 @@ if (mobileMenuBtn && navLinks) {
             document.body.style.overflow = 'auto';
         });
     });
+    
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+            navLinks.classList.remove('active');
+            if (icon) {
+                icon.classList.add('fa-bars');
+                icon.classList.remove('fa-times');
+            }
+            mobileMenuBtn.classList.remove('open');
+            navLinks.setAttribute('aria-hidden', 'true');
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = 'auto';
+        }
+    });
+    
+    // Close when clicking outside the nav
+    document.addEventListener('click', (e) => {
+        if (!navLinks.contains(e.target) && !mobileMenuBtn.contains(e.target) && navLinks.classList.contains('active')) {
+            navLinks.classList.remove('active');
+            if (icon) {
+                icon.classList.add('fa-bars');
+                icon.classList.remove('fa-times');
+            }
+            mobileMenuBtn.classList.remove('open');
+            navLinks.setAttribute('aria-hidden', 'true');
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = 'auto';
+        }
+    });
 }
 
 // Project Filtering
@@ -372,7 +408,11 @@ if (contactForm) {
         const message = contactForm.querySelector('textarea').value;
         
         try {
-            const response = await fetch(`${API_URL}/api/contact`, {
+            const apiBase = window.location.hostname === 'localhost'
+                ? 'http://localhost:3000'
+                : 'https://samreen-portfolio.onrender.com';
+            
+            const response = await fetch(`${apiBase}/api/contact`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -394,3 +434,4 @@ if (contactForm) {
         }
     });
 }
+

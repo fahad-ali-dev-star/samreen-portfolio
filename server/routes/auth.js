@@ -1,7 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 const router = express.Router();
-const DEFAULT_CLIENT_URL = 'https://samreen-portfolio-orfx.vercel.app';
+const DEFAULT_CLIENT_URL = 'https://samreen-portfolio.onrender.com';
 const parseClientUrls = () => {
     const configured = `${process.env.CLIENT_URL || ''},${process.env.CLIENT_URLS || ''}`
         .split(',')

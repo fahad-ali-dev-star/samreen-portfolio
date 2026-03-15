@@ -14,7 +14,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 const isProduction = process.env.NODE_ENV === 'production';
 const RENDER_URL = process.env.RENDER_URL || `https://samreen-portfolio.onrender.com`;
-const DEFAULT_CLIENT_URL = 'https://samreen-portfolio-orfx.vercel.app';
+const DEFAULT_CLIENT_URL = 'https://samreen-portfolio.onrender.com';
 const parseClientUrls = () => {
     const configured = `${process.env.CLIENT_URL || ''},${process.env.CLIENT_URLS || ''}`
         .split(',')
