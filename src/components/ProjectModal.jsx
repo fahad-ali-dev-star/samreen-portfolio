@@ -32,7 +32,7 @@ export function ProjectModal({ project, onClose, getImageUrl }) {
   const galleryImages = Array.isArray(project.gallery_images) && project.gallery_images.length > 0 
     ? project.gallery_images 
     : [];
-  const allImages = galleryImages.length > 0 ? galleryImages : (project.image ? [project.image] : []);
+  const allImages = [project.image, ...galleryImages].filter(Boolean);
   const hasGallery = allImages.length > 1;
 
   const nextImage = () => {
