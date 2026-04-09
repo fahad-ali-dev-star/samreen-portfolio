@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { isAllowedAdminEmail, supabase } from '../lib/supabaseClient';
 import { notifyProjectsChanged, subscribeToProjectsChanges } from '../lib/projectsSync';
@@ -41,6 +41,7 @@ export function AdminPage() {
   const [galleryPreviews, setGalleryPreviews] = useState([]);
   const [confirmDeleteId, setConfirmDeleteId] = useState('');
   const [form, setForm] = useState(emptyForm);
+  const formPanelRef = useRef(null);
   const [isAuthCallbackInProgress, setIsAuthCallbackInProgress] = useState(() => typeof window !== 'undefined'
     && (window.location.search.includes('code=') || window.location.hash.includes('access_token=')));
 
@@ -127,6 +128,7 @@ export function AdminPage() {
     setImagePreview('');
     setGalleryFiles([]);
     setGalleryPreviews([]);
+    setTimeout(() => formPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 50);
   };
 
   const openNewProject = () => resetForm();
@@ -422,7 +424,7 @@ export function AdminPage() {
         {message ? <p className="admin-message">{message}</p> : null}
 
         <div className="admin-grid">
-          <section className="panel">
+          <section className="panel" ref={formPanelRef}>
             <h2>{editingId ? 'Edit Project' : 'Add Project'}</h2>
             <form className="admin-form" onSubmit={handleSave}>
               <input value={form.title} onChange={e => updateForm('title', e.target.value)} placeholder="Project title" required />
