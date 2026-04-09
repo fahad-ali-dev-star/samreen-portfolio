@@ -6,11 +6,7 @@ const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || runtimeConfig.SUPABASE
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || runtimeConfig.SUPABASE_ANON_KEY || '';
 
 const DEFAULT_ADMIN_ALLOWLIST = [
-  'sameenshaftqat.ss@gmail.com',
-  'samreenshafqat.ss@gmail.com',
-  'garuff633@gmail.com',
-  'gabruff@633gmail.com',
-  'gabruff633@gmail.com',
+  'uistudio.28@gmail.com',
 ];
 
 function normalizeEmail(email) {
